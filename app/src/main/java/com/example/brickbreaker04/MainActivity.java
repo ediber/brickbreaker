@@ -27,4 +27,17 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });*/
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    //    gameView.pause();  // Pause the game which in turn pauses the ball's thread
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+     //   gameView.resume();  // Resume the game, restart the ball's movement if it was previously running
+    }
 }
