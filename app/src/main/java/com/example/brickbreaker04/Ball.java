@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 
 public class Ball implements Runnable {
     private int x, y;
@@ -35,18 +36,21 @@ public class Ball implements Runnable {
             x += velocityX;
             y += velocityY;
 
-            // Check for boundary collisions
             if (x <= 0 || x + diameter >= gameView.getWidth()) {
                 velocityX *= -1; // Reverse the horizontal direction upon hitting the wall
             }
-            if (y <= 0 || y + diameter >= gameView.getHeight()) {
-                velocityY *= -1; // Reverse the vertical direction upon hitting the wall or floor
+
+            if (y <= 0) {
+                velocityY *= -1; // Reverse vertical direction upon hitting the top wall
+            } else if (y + diameter > gameView.getHeight()) {  // Use greater than strictly
+                gameView.gameOver(); // Notify GameView to handle game over
+                break; // Stop the loop
             }
 
             gameView.postInvalidate(); // Request to redraw the gameView
 
             try {
-                Thread.sleep(30); // Delay to temper the game speed
+                Thread.sleep(30); // Control the update rate
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

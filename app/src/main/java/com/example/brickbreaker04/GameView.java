@@ -8,6 +8,8 @@ import android.graphics.Rect;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -44,7 +46,19 @@ public class GameView extends View {
 
     public GameView(Context context) {
         super(context);
-        init();
+
+        // Ensuring we get a layout pass before starting the game
+        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                // Ensure we only call this once by removing the listener immediately
+                getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                screenWidth = getWidth();
+                screenHeight = getHeight();
+
+                init();
+            }
+        });
     }
 
     private void init() {
@@ -145,7 +159,7 @@ public class GameView extends View {
     private void initBall() {
         int startX = screenWidth / 2;
         int startY = screenHeight / 2;
-        int diameter = 100;
+        int diameter = 50;
         ball = new Ball(getContext(), this, startX, startY, diameter);
         ballThread = new Thread(ball);
         ballThread.start();
@@ -171,4 +185,15 @@ public class GameView extends View {
     }
 
 
+    public void gameOver() {
+        if (ball != null) {
+            ball.stop(); // Stop the ball's thread
+        }
+        post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getContext(), "Game Over: Ball hit bottom", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 }
