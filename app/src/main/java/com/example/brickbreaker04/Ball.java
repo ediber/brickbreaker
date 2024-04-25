@@ -36,6 +36,13 @@ public class Ball implements Runnable {
             x += velocityX;
             y += velocityY;
 
+            // Check for collision with the paddle
+            Rect ballRect = new Rect(x, y, x + diameter, y + diameter);
+            Rect paddleRect = gameView.getPaddleRect();
+            if (Rect.intersects(ballRect, paddleRect)) {
+                velocityY = -velocityY; // Reverse the Y direction
+            }
+
             if (x <= 0 || x + diameter >= gameView.getWidth()) {
                 velocityX *= -1; // Reverse the horizontal direction upon hitting the wall
             }

@@ -196,4 +196,8 @@ public class GameView extends View {
             }
         });
     }
+
+    public Rect getPaddleRect() {
+        return paddle; // make sure 'paddle' is up to date
+    }
 }
