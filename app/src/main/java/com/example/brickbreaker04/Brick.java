@@ -23,6 +23,7 @@ public class Brick {
         this.score = score;
     }
 
+    ///
     public Rect getRect() {
         return rect;
     }
