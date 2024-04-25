@@ -24,7 +24,7 @@ public class GameView extends View {
     private boolean moveLeft, moveRight;
     private Handler handler = new Handler();
 
-    private ArrayList<Rect> bricks = new ArrayList<>();
+    private ArrayList<Brick> bricks = new ArrayList<>();
     private int brickWidth = 180;
     private int brickHeight = 50;
     private int brickPadding = 10;
@@ -78,20 +78,12 @@ public class GameView extends View {
 
 
     private void initBricks() {
-        int[] colors = {
-                Color.RED, Color.YELLOW, Color.GREEN, Color.MAGENTA, Color.CYAN // Random colors except blue
-        };
-
         int brickTop = 50; // Start 50 pixels down from the top of the screen
         for (int row = 0; row < numBrickRows; row++) {
             int brickLeft = brickPadding;
             for (int col = 0; col < numBricksPerRow; col++) {
-                Rect brick = new Rect(brickLeft, brickTop, brickLeft + brickWidth, brickTop + brickHeight);
+                Brick brick = new Brick(brickLeft, brickTop, brickWidth, brickHeight);
                 bricks.add(brick);
-
-                Paint brickPaint = new Paint();
-                brickPaint.setColor(colors[random.nextInt(colors.length)]);
-                brickPaints.add(brickPaint);
 
                 brickLeft += brickWidth + brickPadding; // Move to the right
             }
@@ -109,7 +101,8 @@ public class GameView extends View {
 
         // Draw each brick with its assigned color
         for (int i = 0; i < bricks.size(); i++) {
-            canvas.drawRect(bricks.get(i), brickPaints.get(i));
+            Brick brick = bricks.get(i);
+            canvas.drawRect(brick.getRect(), brick.getPaint());
         }
 
         // Draw the ball
