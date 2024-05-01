@@ -34,6 +34,7 @@ public class GameView extends View {
     private Random random = new Random();
     private Ball ball;
     private Thread ballThread;
+    private int score = 0;
 
 
     private Runnable runnable = new Runnable() {
@@ -192,5 +193,14 @@ public class GameView extends View {
 
     public Rect getPaddleRect() {
         return paddle; // make sure 'paddle' is up to date
+    }
+
+    public ArrayList<Brick> getBricks() {
+        return new ArrayList<>(bricks);  // Return a copy to avoid concurrent modification issues
+    }
+
+    public void removeBrick(Brick brick) {
+        bricks.remove(brick);
+        score += brick.getScore();
     }
 }

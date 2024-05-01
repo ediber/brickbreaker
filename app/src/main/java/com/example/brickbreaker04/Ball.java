@@ -54,6 +54,15 @@ public class Ball implements Runnable {
                 break; // Stop the loop
             }
 
+            // Check for collisions with bricks
+            for (Brick brick : gameView.getBricks()) {
+                if (Rect.intersects(ballRect, brick.getRect())) {
+                    gameView.removeBrick(brick);  // Handle brick removal or disabling
+                    velocityY = -velocityY;  // Reverse the Y direction
+                    break;  // Break out of the loop to avoid multiple collisions at once
+                }
+            }
+
             gameView.postInvalidate(); // Request to redraw the gameView
 
             try {

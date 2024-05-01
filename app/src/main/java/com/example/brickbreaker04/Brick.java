@@ -19,8 +19,9 @@ public class Brick {
         this.rect = new Rect(brickLeft, brickTop, brickLeft + brickWidth, brickTop + brickHeight);;
         Random random = new Random();
         paint = new Paint();
-        this.paint.setColor(colors[random.nextInt(colors.length)]);
-        this.score = score;
+        int index = random.nextInt(colors.length);
+        this.paint.setColor(colors[index]);
+        this.score = (index+1) * 50;
     }
 
     ///
