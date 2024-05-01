@@ -1,6 +1,8 @@
 package com.example.brickbreaker04;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,12 +13,23 @@ import androidx.core.view.WindowInsetsCompat;
 public class MainActivity extends AppCompatActivity {
 
     private GameView gameView;
+    private TextView scoreTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        gameView = new GameView(this);
-        setContentView(gameView);
+        setContentView(R.layout.activity_main);
+
+        gameView = findViewById(R.id.gameView);
+        scoreTextView = findViewById(R.id.scoreTextView);
+
+        gameView.setScoreListener(new GameView.ScoreListener() {
+            @Override
+            public void onScoreChanged(int score) {
+                scoreTextView.setText("Score: " + score);
+            }
+        });
+
         gameView.startGame();
 
 /*        EdgeToEdge.enable(this);

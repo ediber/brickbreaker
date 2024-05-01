@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Handler;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -15,6 +16,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class GameView extends View {
+    public interface ScoreListener {
+        void onScoreChanged(int score);
+    }
     private Paint paint;
     private Rect paddle;
     private int paddleWidth = 300;
@@ -35,6 +39,9 @@ public class GameView extends View {
     private Ball ball;
     private Thread ballThread;
     private int score = 0;
+    private ScoreListener scoreListener;
+
+
 
 
     private Runnable runnable = new Runnable() {
@@ -45,8 +52,8 @@ public class GameView extends View {
         }
     };
 
-    public GameView(Context context) {
-        super(context);
+    public GameView(Context context , AttributeSet attrs) {
+        super(context, attrs);
 
         // Ensuring we get a layout pass before starting the game
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -62,6 +69,10 @@ public class GameView extends View {
         });
     }
 
+    public void setScoreListener(ScoreListener listener) {
+        this.scoreListener = listener;
+    }
+
     private void init() {
         paint = new Paint();
 
@@ -69,7 +80,7 @@ public class GameView extends View {
         screenHeight = getResources().getDisplayMetrics().heightPixels;
 
         int paddleX = screenWidth / 2 - paddleWidth / 2;
-        int paddleY = screenHeight - paddleHeight - 20; // 20 pixels from the bottom
+        int paddleY = screenHeight - paddleHeight - 200; // 20 pixels from the bottom
         paddle = new Rect(paddleX, paddleY, paddleX + paddleWidth, paddleY + paddleHeight);
 
         paint.setColor(Color.BLUE); // Set paddle color to blue
@@ -202,5 +213,8 @@ public class GameView extends View {
     public void removeBrick(Brick brick) {
         bricks.remove(brick);
         score += brick.getScore();
+        if (scoreListener != null) {
+            scoreListener.onScoreChanged(score);
+        }
     }
 }
