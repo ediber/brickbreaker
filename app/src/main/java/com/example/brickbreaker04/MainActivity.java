@@ -1,6 +1,7 @@
 package com.example.brickbreaker04;
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.TextView;
 
@@ -12,8 +13,13 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int GAME_DURATION_SECONDS = 20;
+
     private GameView gameView;
     private TextView scoreTextView;
+    private TextView timerTextView;
+    private CountDownTimer countDownTimer;
+    private long remainingTime; // Member variable to store remaining time
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
         gameView = findViewById(R.id.gameView);
         scoreTextView = findViewById(R.id.scoreTextView);
+        timerTextView = findViewById(R.id.timerTextView);
 
         gameView.setScoreListener(new GameView.ScoreListener() {
             @Override
@@ -32,25 +39,37 @@ public class MainActivity extends AppCompatActivity {
 
         gameView.startGame();
 
-/*        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });*/
+    }
+
+    private void startTimer(long millisInFuture) {
+        countDownTimer = new CountDownTimer(millisInFuture, 1000) {
+            public void onTick(long millisUntilFinished) {
+                remainingTime = millisUntilFinished;
+                long minutes = (remainingTime / 1000) / 60;
+                long seconds = (remainingTime / 1000) % 60;
+                timerTextView.setText(String.format("%02d:%02d", minutes, seconds));
+            }
+
+            public void onFinish() {
+                timerTextView.setText("00:00");
+                gameView.gameOver();
+            }
+        }.start();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-    //    gameView.pause();  // Pause the game which in turn pauses the ball's thread
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
     }
-
 
     @Override
     protected void onResume() {
         super.onResume();
-     //   gameView.resume();  // Resume the game, restart the ball's movement if it was previously running
+        if (remainingTime > 0) {
+            startTimer(remainingTime);
+        }
     }
 }

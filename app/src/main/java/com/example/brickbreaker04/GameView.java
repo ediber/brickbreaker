@@ -6,7 +6,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -52,9 +54,8 @@ public class GameView extends View {
         }
     };
 
-    public GameView(Context context , AttributeSet attrs) {
+    public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
-
         // Ensuring we get a layout pass before starting the game
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -64,7 +65,8 @@ public class GameView extends View {
                 screenWidth = getWidth();
                 screenHeight = getHeight();
 
-                init();
+                init(); // Initialize paddle and bricks
+                initBall(); // Initialize and start ball movement
             }
         });
     }
@@ -166,8 +168,18 @@ public class GameView extends View {
         int startY = screenHeight / 2;
         int diameter = 50;
         ball = new Ball(getContext(), this, startX, startY, diameter);
-        ballThread = new Thread(ball);
-        ballThread.start();
+
+        // Delay starting the ball's movement until the view is fully ready
+        handler.postDelayed(this::startBallMovement, 300); // Delay for 100 milliseconds
+    }
+
+    private void startBallMovement() {
+        if (getHeight() > 0 && (ballThread == null || !ballThread.isAlive())) {
+            ballThread = new Thread(ball);
+            ballThread.start();
+        } else {
+            handler.postDelayed(this::startBallMovement, 300); // Retry until the height is greater than 0
+        }
     }
 
     public void pause() {
@@ -214,7 +226,13 @@ public class GameView extends View {
         bricks.remove(brick);
         score += brick.getScore();
         if (scoreListener != null) {
-            scoreListener.onScoreChanged(score);
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    scoreListener.onScoreChanged(score);
+                }
+            });
         }
     }
+
 }
