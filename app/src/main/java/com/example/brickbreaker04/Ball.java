@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.util.Log;
 
 public class Ball implements Runnable {
     private int x, y;
@@ -14,6 +13,7 @@ public class Ball implements Runnable {
     private Paint paint;
     private boolean running = true;
     private final GameView gameView;
+    private int sleepTime = 30; // Initial sleep time
 
     public Ball(Context context, GameView gameView, int startX, int startY, int diameter) {
         this.gameView = gameView;
@@ -59,6 +59,9 @@ public class Ball implements Runnable {
                 if (Rect.intersects(ballRect, brick.getRect())) {
                     gameView.removeBrick(brick);  // Handle brick removal or disabling
                     velocityY = -velocityY;  // Reverse the Y direction
+                    if(gameView.getBricks().isEmpty()){ // check if are there more bricks
+                        gameView.advanceLevel();
+                    }
                     break;  // Break out of the loop to avoid multiple collisions at once
                 }
             }
@@ -66,7 +69,7 @@ public class Ball implements Runnable {
             gameView.postInvalidate(); // Request to redraw the gameView
 
             try {
-                Thread.sleep(30); // Control the update rate
+                Thread.sleep(sleepTime); // Control the update rate
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -91,5 +94,9 @@ public class Ball implements Runnable {
 
     public void stop() {
         running = false;
+    }
+
+    public void reduceSleepTime() {
+        sleepTime = sleepTime/2; // Ensure sleepTime doesn't go below 1 millisecond
     }
 }

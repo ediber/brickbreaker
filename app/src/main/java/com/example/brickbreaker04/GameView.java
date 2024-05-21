@@ -43,9 +43,6 @@ public class GameView extends View {
     private int score = 0;
     private ScoreListener scoreListener;
 
-
-
-
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
@@ -233,6 +230,12 @@ public class GameView extends View {
                 }
             });
         }
+    }
+
+    public void advanceLevel() { // TODO test it
+        initBricks(); // Reinitialize bricks
+        invalidate(); // Redraw the view to reflect changes
+        ball.reduceSleepTime();
     }
 
 }
