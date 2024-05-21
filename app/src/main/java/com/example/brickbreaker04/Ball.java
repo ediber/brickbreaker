@@ -6,17 +6,33 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import java.util.ArrayList;
+
 public class Ball implements Runnable {
     private int x, y;
     private int diameter;
     private int velocityX, velocityY;
     private Paint paint;
     private boolean running = true;
-    private final GameView gameView;
     private int sleepTime = 30; // Initial sleep time
 
-    public Ball(Context context, GameView gameView, int startX, int startY, int diameter) {
-        this.gameView = gameView;
+    private Rect paddleRect;
+    private ArrayList<Brick> bricks;
+    private BallListener listener;
+
+    public interface BallListener {
+        void onGameOver();
+        void removeBrick(Brick brick);
+        void advanceLevel();
+        void postInvalidate();
+        int getWidth();
+        int getHeight();
+    }
+
+    public Ball(Context context, Rect paddleRect, ArrayList<Brick> bricks, BallListener listener, int startX, int startY, int diameter) {
+        this.paddleRect = paddleRect;
+        this.bricks = bricks;
+        this.listener = listener;
         this.x = startX;
         this.y = startY;
         this.diameter = diameter;
@@ -38,35 +54,34 @@ public class Ball implements Runnable {
 
             // Check for collision with the paddle
             Rect ballRect = new Rect(x, y, x + diameter, y + diameter);
-            Rect paddleRect = gameView.getPaddleRect();
             if (Rect.intersects(ballRect, paddleRect)) {
                 velocityY = -velocityY; // Reverse the Y direction
             }
 
-            if (x <= 0 || x + diameter >= gameView.getWidth()) {
+            if (x <= 0 || x + diameter >= listener.getWidth()) {
                 velocityX *= -1; // Reverse the horizontal direction upon hitting the wall
             }
 
             if (y <= 0) {
                 velocityY *= -1; // Reverse vertical direction upon hitting the top wall
-            } else if (y + diameter > gameView.getHeight()) {  // Use greater than strictly
-                gameView.gameOver(); // Notify GameView to handle game over
+            } else if (y + diameter > listener.getHeight()) {  // Use greater than strictly
+                listener.onGameOver(); // Notify GameView to handle game over
                 break; // Stop the loop
             }
 
             // Check for collisions with bricks
-            for (Brick brick : gameView.getBricks()) {
+            for (Brick brick : bricks) {
                 if (Rect.intersects(ballRect, brick.getRect())) {
-                    gameView.removeBrick(brick);  // Handle brick removal or disabling
+                    listener.removeBrick(brick);  // Handle brick removal or disabling
                     velocityY = -velocityY;  // Reverse the Y direction
-                    if(gameView.getBricks().isEmpty()){ // check if are there more bricks
-                        gameView.advanceLevel();
+                    if(bricks.isEmpty()){ // check if there are more bricks
+                        listener.advanceLevel();
                     }
                     break;  // Break out of the loop to avoid multiple collisions at once
                 }
             }
 
-            gameView.postInvalidate(); // Request to redraw the gameView
+            listener.postInvalidate(); // Request to redraw the gameView
 
             try {
                 Thread.sleep(sleepTime); // Control the update rate
@@ -80,23 +95,11 @@ public class Ball implements Runnable {
         canvas.drawCircle(x + diameter / 2, y + diameter / 2, diameter / 2, paint);
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public int getDiameter() {
-        return diameter;
-    }
-
     public void stop() {
         running = false;
     }
 
     public void reduceSleepTime() {
-        sleepTime = sleepTime/2; // Ensure sleepTime doesn't go below 1 millisecond
+        sleepTime = Math.max(1, sleepTime / 2); // Ensure sleepTime doesn't go below 1 millisecond
     }
 }

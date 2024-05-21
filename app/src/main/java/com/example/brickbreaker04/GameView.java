@@ -1,6 +1,9 @@
 package com.example.brickbreaker04;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -8,11 +11,9 @@ import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -21,6 +22,7 @@ public class GameView extends View {
     public interface ScoreListener {
         void onScoreChanged(int score);
     }
+
     private Paint paint;
     private Rect paddle;
     private int paddleWidth = 300;
@@ -87,8 +89,8 @@ public class GameView extends View {
         initBall();
     }
 
-
     private void initBricks() {
+        bricks.clear(); // Clear the existing bricks
         int brickTop = 50; // Start 50 pixels down from the top of the screen
         for (int row = 0; row < numBrickRows; row++) {
             int brickLeft = brickPadding;
@@ -164,7 +166,41 @@ public class GameView extends View {
         int startX = screenWidth / 2;
         int startY = screenHeight / 2;
         int diameter = 50;
-        ball = new Ball(getContext(), this, startX, startY, diameter);
+
+        // Create a new listener
+        Ball.BallListener ballListener = new Ball.BallListener() {
+            @Override
+            public void onGameOver() {
+                gameOver();
+            }
+
+            @Override
+            public void removeBrick(Brick brick) {
+                GameView.this.removeBrick(brick);
+            }
+
+            @Override
+            public void advanceLevel() {
+                GameView.this.advanceLevel();
+            }
+
+            @Override
+            public void postInvalidate() {
+                GameView.this.postInvalidate();
+            }
+
+            @Override
+            public int getWidth() {
+                return GameView.this.getWidth();
+            }
+
+            @Override
+            public int getHeight() {
+                return GameView.this.getHeight();
+            }
+        };
+
+        ball = new Ball(getContext(), paddle, bricks, ballListener, startX, startY, diameter);
 
         // Delay starting the ball's movement until the view is fully ready
         handler.postDelayed(this::startBallMovement, 300); // Delay for 100 milliseconds
@@ -198,15 +234,27 @@ public class GameView extends View {
         }
     }
 
-
     public void gameOver() {
         if (ball != null) {
             ball.stop(); // Stop the ball's thread
         }
-        post(new Runnable() {
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getContext(), "Game Over: Ball hit bottom", Toast.LENGTH_LONG).show();
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Game Over")
+                        .setMessage("Ball hit the bottom. Game Over!")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Open the new activity when OK is clicked
+                                Intent intent = new Intent(getContext(), AddResultActivity.class);
+                                intent.putExtra("score", score); // Pass the score as an extra
+                                getContext().startActivity(intent);
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
             }
         });
     }
