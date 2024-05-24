@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "490459796680",
+    "project_id": "brickbreaker04-59093",
+    "storage_bucket": "brickbreaker04-59093.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:490459796680:android:8cfd99e0b4558f237b81fd",
+        "android_client_info": {
+          "package_name": "com.example.brickbreaker04"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3RYAA2a15V8upgA4tO2gDSaROoqBnUMo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
