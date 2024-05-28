@@ -15,7 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 
     private EditText usernameEditText;
     private EditText passwordEditText;
@@ -29,19 +29,28 @@ public class LoginActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
 
-        usernameEditText = findViewById(R.id.username);
-        passwordEditText = findViewById(R.id.password);
-        loginButton = findViewById(R.id.login_button);
-        signupButton = findViewById(R.id.signup_button);
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        db = FirebaseFirestore.getInstance();
+        initializeViews();
+        setListeners();
 
+        db = FirebaseFirestore.getInstance();
+    }
+
+    @Override
+    protected void initializeViews() {
+        usernameEditText = findViewById(R.id.username);
+        passwordEditText = findViewById(R.id.password);
+        loginButton = findViewById(R.id.login_button);
+        signupButton = findViewById(R.id.signup_button);
+    }
+
+    @Override
+    protected void setListeners() {
         signupButton.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
             startActivity(intent);
@@ -72,11 +81,9 @@ public class LoginActivity extends AppCompatActivity {
                             // Save user data or do something with the user object
                             Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
 
-                            // You can navigate to another activity or save the user information
-                            // For example:
-                            // currentUser = user;
-                            // Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            // startActivity(intent);
+                             currentUser = user;
+                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                             startActivity(intent);
                         }
                     } else {
                         Toast.makeText(LoginActivity.this, "Invalid username or password", Toast.LENGTH_SHORT).show();

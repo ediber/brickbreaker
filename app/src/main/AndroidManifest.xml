@@ -38,6 +38,10 @@
             android:name=".MainActivity"
             android:exported="true">
         </activity>
+
+        <activity
+            android:name=".BaseActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
