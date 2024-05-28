@@ -1,19 +1,21 @@
 package com.example.brickbreaker04;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -23,6 +25,7 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText passwordEditText;
     private Button signupButton;
     private FirebaseFirestore db;
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
 
     @Override
@@ -63,8 +66,11 @@ public class SignUpActivity extends AppCompatActivity {
         // For demonstration purposes, we'll just show a Toast message
         Toast.makeText(this, "Signing up with:\nUsername: " + username + "\nName: " + name + "\nPhone: " + phone + "\nPassword: " + password, Toast.LENGTH_LONG).show();
 
+        String id = generateRandomId();
+
         // Create a new user with the data
         Map<String, Object> user = new HashMap<>();
+        user.put("id", id);
         user.put("username", username);
         user.put("name", name);
         user.put("phone", phone);
@@ -75,15 +81,22 @@ public class SignUpActivity extends AppCompatActivity {
                 .add(user)
                 .addOnSuccessListener(documentReference -> {
                     Toast.makeText(this, "User signed up successfully!", Toast.LENGTH_SHORT).show();
-                    // Clear the input fields
-                    usernameEditText.setText("");
-                    nameEditText.setText("");
-                    phoneEditText.setText("");
-                    passwordEditText.setText("");
+
+                    Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Error signing up user: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
 
     }
+
+    private String generateRandomId() {
+        Random random = new SecureRandom();
+        StringBuilder sb = new StringBuilder(5);
+        for (int i = 0; i < 5; i++) {
+            sb.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
+        }
+        return sb.toString();       }
 }
