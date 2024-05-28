@@ -1,4 +1,4 @@
-package com.example.brickbreaker04;
+package com.example.brickbreaker04.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +14,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class AddResultActivity extends AppCompatActivity {
+import com.example.brickbreaker04.R;
+
+public class AddResultActivity extends BaseActivity {
 
     private TextView scoreTextView;
     private EditText nameEditText;
@@ -28,20 +30,32 @@ public class AddResultActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_add_result);
 
+        initializeViews();
+        setListeners();
+
+        // Retrieve the score from the intent
+        score = getIntent().getIntExtra("score", 0);
+        scoreTextView.setText("Score: " + score);
+
+
+    }
+
+    @Override
+    protected void initializeViews() {
+        scoreTextView = findViewById(R.id.scoreTextView);
+        nameEditText = findViewById(R.id.nameEditText);
+        saveButton = findViewById(R.id.saveButton);
+        viewScoresButton = findViewById(R.id.viewScoresButton);
+    }
+
+    @Override
+    protected void setListeners() {
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        scoreTextView = findViewById(R.id.scoreTextView);
-        nameEditText = findViewById(R.id.nameEditText);
-        saveButton = findViewById(R.id.saveButton);
-        viewScoresButton = findViewById(R.id.viewScoresButton);
-
-        // Retrieve the score from the intent
-        score = getIntent().getIntExtra("score", 0);
-        scoreTextView.setText("Score: " + score);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override

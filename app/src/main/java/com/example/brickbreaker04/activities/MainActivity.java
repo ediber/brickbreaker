@@ -1,12 +1,12 @@
-package com.example.brickbreaker04;
+package com.example.brickbreaker04.activities;
 
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.widget.TextView;
+import com.example.brickbreaker04.GameView;
+import com.example.brickbreaker04.R;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private static final int GAME_DURATION_SECONDS = 20 * 1000; // 20 seconds in milliseconds
 
@@ -21,11 +21,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initializeViews();
+        setListeners();
+
+        // Start the game and the timer
+        gameView.startGame();
+        startTimer(remainingTime);
+    }
+
+    @Override
+    protected void initializeViews() {
         // Initialize views
         gameView = findViewById(R.id.gameView);
         scoreTextView = findViewById(R.id.scoreTextView);
-        timerTextView = findViewById(R.id.timerTextView);
+        timerTextView = findViewById(R.id.timerTextView);    }
 
+    @Override
+    protected void setListeners() {
         // Set up the score listener
         gameView.setScoreListener(new GameView.ScoreListener() {
             @Override
@@ -33,10 +45,6 @@ public class MainActivity extends AppCompatActivity {
                 scoreTextView.setText("Score: " + score);
             }
         });
-
-        // Start the game and the timer
-        gameView.startGame();
-        startTimer(remainingTime);
     }
 
     private void startTimer(long millisInFuture) {

@@ -1,8 +1,8 @@
-package com.example.brickbreaker04;
+package com.example.brickbreaker04.activities;
 
 import android.os.Bundle;
-
 import androidx.appcompat.app.AppCompatActivity;
+import com.example.brickbreaker04.User;
 
 public abstract class BaseActivity extends AppCompatActivity {
 

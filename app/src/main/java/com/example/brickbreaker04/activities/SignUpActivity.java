@@ -1,4 +1,4 @@
-package com.example.brickbreaker04;
+package com.example.brickbreaker04.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,18 +6,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import com.example.brickbreaker04.R;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpActivity extends BaseActivity{
 
     private EditText usernameEditText;
     private EditText nameEditText;
@@ -36,11 +35,24 @@ public class SignUpActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 
+        initializeViews();
+        setListeners();
+
+        signupButton.setOnClickListener(v -> gatherDataAndSignUp());
+    }
+
+    @Override
+    protected void initializeViews() {
         usernameEditText = findViewById(R.id.username);
         nameEditText = findViewById(R.id.name);
         phoneEditText = findViewById(R.id.phone);
         passwordEditText = findViewById(R.id.password);
         signupButton = findViewById(R.id.signup_button);
+
+    }
+
+    @Override
+    protected void setListeners() {
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());

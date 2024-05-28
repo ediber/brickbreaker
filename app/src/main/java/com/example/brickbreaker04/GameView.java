@@ -15,6 +15,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
+import com.example.brickbreaker04.activities.AddResultActivity;
+
 import java.util.ArrayList;
 import java.util.Random;
 
