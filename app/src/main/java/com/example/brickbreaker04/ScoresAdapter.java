@@ -1,4 +1,4 @@
-package com.example.brickbreaker04.activities;
+package com.example.brickbreaker04;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -6,14 +6,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.brickbreaker04.R;
+
 import java.util.List;
 
 public class ScoresAdapter extends RecyclerView.Adapter<ScoresAdapter.ScoreViewHolder> {
 
-    private final List<Score> scores;
+    private List<UserScore> scores;
 
-    public ScoresAdapter(List<Score> scores) {
+    public ScoresAdapter(List<UserScore> scores) {
         this.scores = scores;
     }
 
@@ -24,28 +24,35 @@ public class ScoresAdapter extends RecyclerView.Adapter<ScoresAdapter.ScoreViewH
         return new ScoreViewHolder(view);
     }
 
+    // put the data in the view holder for the user to see
     @Override
     public void onBindViewHolder(@NonNull ScoreViewHolder holder, int position) {
-        Score score = scores.get(position);
+        UserScore score = scores.get(position);
         holder.usernameTextView.setText(score.getUsername());
-        holder.phoneTextView.setText(score.getPhone());
+        holder.nameTextView.setText(score.getName());
         holder.scoreTextView.setText(String.valueOf(score.getScore()));
     }
 
+    // Returns the number of items in the list
     @Override
     public int getItemCount() {
         return scores.size();
     }
 
+    public void setScoreList(List<UserScore> scoreList) {
+        this.scores = scoreList;
+    }
+
+    // ViewHolder class for the RecyclerView represent each item in the list
     static class ScoreViewHolder extends RecyclerView.ViewHolder {
         TextView usernameTextView;
-        TextView phoneTextView;
+        TextView nameTextView;
         TextView scoreTextView;
 
         public ScoreViewHolder(@NonNull View itemView) {
             super(itemView);
             usernameTextView = itemView.findViewById(R.id.usernameTextView);
-            phoneTextView = itemView.findViewById(R.id.phoneTextView);
+            nameTextView = itemView.findViewById(R.id.phoneTextView);
             scoreTextView = itemView.findViewById(R.id.scoreTextView);
         }
     }
