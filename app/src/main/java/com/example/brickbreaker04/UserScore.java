@@ -1,6 +1,6 @@
 package com.example.brickbreaker04;
 
-public class UserScore {
+public class UserScore implements Comparable<UserScore>{
     private String id;
     private String username;
     private String name;
@@ -43,5 +43,16 @@ public class UserScore {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    @Override
+    public int compareTo(UserScore other) {
+        if (this.score > other.score) {
+            return 1;
+        } else if (this.score < other.score) {
+            return -1;
+        } else {
+            return 0;
+        }
     }
 }

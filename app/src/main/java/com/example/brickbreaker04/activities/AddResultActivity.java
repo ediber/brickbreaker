@@ -41,13 +41,6 @@ public class AddResultActivity extends BaseActivity {
 
     @Override
     protected void initializeViews() {
-        scoreTextView = findViewById(R.id.scoreTextView);
-        saveButton = findViewById(R.id.saveButton);
-        viewScoresButton = findViewById(R.id.viewScoresButton);
-    }
-
-    @Override
-    protected void setListeners() {
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -55,6 +48,13 @@ public class AddResultActivity extends BaseActivity {
             return insets;
         });
 
+        scoreTextView = findViewById(R.id.scoreTextView);
+        saveButton = findViewById(R.id.saveButton);
+        viewScoresButton = findViewById(R.id.viewScoresButton);
+    }
+
+    @Override
+    protected void setListeners() {
         saveButton.setOnClickListener(v -> saveScore(score));
 
         viewScoresButton.setOnClickListener(v -> viewScores());

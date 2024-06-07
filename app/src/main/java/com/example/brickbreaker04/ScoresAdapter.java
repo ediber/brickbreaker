@@ -1,5 +1,6 @@
 package com.example.brickbreaker04;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +12,13 @@ import java.util.List;
 
 public class ScoresAdapter extends RecyclerView.Adapter<ScoresAdapter.ScoreViewHolder> {
 
+    private final String id;
     private List<UserScore> scores;
 
-    public ScoresAdapter(List<UserScore> scores) {
+    public ScoresAdapter(List<UserScore> scores, String id) {
         this.scores = scores;
+        this.id = id;
     }
-
     @NonNull
     @Override
     public ScoreViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -31,6 +33,10 @@ public class ScoresAdapter extends RecyclerView.Adapter<ScoresAdapter.ScoreViewH
         holder.usernameTextView.setText(score.getUsername());
         holder.nameTextView.setText(score.getName());
         holder.scoreTextView.setText(String.valueOf(score.getScore()));
+
+        if (score.getId().equals(id)) {
+            holder.root.setBackgroundColor(Color.argb(50,89,191,159));
+        }
     }
 
     // Returns the number of items in the list
@@ -45,6 +51,7 @@ public class ScoresAdapter extends RecyclerView.Adapter<ScoresAdapter.ScoreViewH
 
     // ViewHolder class for the RecyclerView represent each item in the list
     static class ScoreViewHolder extends RecyclerView.ViewHolder {
+        View root;
         TextView usernameTextView;
         TextView nameTextView;
         TextView scoreTextView;
@@ -54,6 +61,7 @@ public class ScoresAdapter extends RecyclerView.Adapter<ScoresAdapter.ScoreViewH
             usernameTextView = itemView.findViewById(R.id.usernameTextView);
             nameTextView = itemView.findViewById(R.id.phoneTextView);
             scoreTextView = itemView.findViewById(R.id.scoreTextView);
+            root = itemView.findViewById(R.id.item_score_root);
         }
     }
 

@@ -1,6 +1,7 @@
 package com.example.brickbreaker04.activities;
 
 import android.os.Bundle;
+import android.widget.Button;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.activity.EdgeToEdge;
@@ -15,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ViewScoresActivity extends BaseActivity {
@@ -23,12 +25,20 @@ public class ViewScoresActivity extends BaseActivity {
     private ScoresAdapter scoresAdapter;
     private List<UserScore> scoreList;
     private FirebaseFirestore db;
+    private Button buttonSortHighToLow;
+    private Button buttonSortLowToHigh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_view_scores);
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         initializeViews();
         setListeners();
@@ -42,16 +52,27 @@ public class ViewScoresActivity extends BaseActivity {
         scoresRecyclerView = findViewById(R.id.scoresRecyclerView);
         scoresRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         scoreList = new ArrayList<>();
-        scoresAdapter = new ScoresAdapter(scoreList);
+        scoresAdapter = new ScoresAdapter(scoreList, currentUser.getId());
         scoresRecyclerView.setAdapter(scoresAdapter);
+
+        buttonSortHighToLow = findViewById(R.id.button_sort_high_to_low);
+        buttonSortLowToHigh = findViewById(R.id.button_sort_low_to_high);
     }
 
     @Override
     protected void setListeners() {
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+
+
+        buttonSortHighToLow.setOnClickListener(v -> {
+            Collections.sort(scoreList, Collections.reverseOrder());
+            scoresAdapter.setScoreList(scoreList);
+            scoresAdapter.notifyDataSetChanged();
+        });
+
+        buttonSortLowToHigh.setOnClickListener(v -> {
+            Collections.sort(scoreList);
+            scoresAdapter.setScoreList(scoreList);
+            scoresAdapter.notifyDataSetChanged();
         });
     }
 
