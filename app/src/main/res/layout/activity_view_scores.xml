@@ -15,8 +15,7 @@
         android:id="@+id/button_sort_low_to_high"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sort Low to High"
-        android:textColorHint="#59BF9F" />
+        android:text="Sort Low to High" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/scoresRecyclerView"
