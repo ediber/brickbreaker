@@ -58,7 +58,7 @@ public class MainActivity extends BaseActivity {
 
             public void onFinish() {
                 timerTextView.setText("00:00");
-                gameView.gameOver();
+             //   gameView.gameOver();
             }
         }.start();
     }
@@ -78,7 +78,7 @@ public class MainActivity extends BaseActivity {
             startTimer(remainingTime);
         } else {
             timerTextView.setText("00:00");
-            gameView.gameOver();
+       //     gameView.gameOver();
         }
     }
 }
