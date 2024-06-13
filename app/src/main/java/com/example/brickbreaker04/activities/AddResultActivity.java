@@ -61,12 +61,12 @@ public class AddResultActivity extends BaseActivity {
     }
 
     private void saveScore(int score) {
-        if (currentUser != null) {
-            String id = currentUser.getId();
+        if (currentUser != null) { // Check if the user is logged in
+            String id = currentUser.getId(); // Get the user ID
 
-            Map<String, Object> scoreData = new HashMap<>();
-            scoreData.put("userId", id);
-            scoreData.put("score", score);
+            Map<String, Object> scoreData = new HashMap<>(); // Create a map to store the score data
+            scoreData.put("userId", id); // Add the user ID to the map
+            scoreData.put("score", score); // Add the score to the map
 
             db.collection("scores")
                     .add(scoreData)
