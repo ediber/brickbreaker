@@ -16,6 +16,8 @@ public class MainActivity extends BaseActivity {
     private GameView gameView;
     private TextView scoreTextView;
     private TextView timerTextView;
+    private TextView levelTextView;
+
     private CountDownTimer countDownTimer;
     private long remainingTime = GAME_DURATION_SECONDS; // Initialize remainingTime
 
@@ -37,15 +39,24 @@ public class MainActivity extends BaseActivity {
         // Initialize views
         gameView = findViewById(R.id.gameView);
         scoreTextView = findViewById(R.id.scoreTextView);
-        timerTextView = findViewById(R.id.timerTextView);    }
+        timerTextView = findViewById(R.id.timerTextView);
+        levelTextView = findViewById(R.id.levelTextView);
+        levelTextView.setText("Level: " + 1); // Set initial level text
+    }
 
     @Override
     protected void setListeners() {
         // Set up the score listener
-        gameView.setScoreListener(new GameView.ScoreListener() {
+        gameView.setListener(new GameView.Listener() {
             @Override
             public void onScoreChanged(int score) {
                 scoreTextView.setText("Score: " + score);
+            }
+
+            @Override
+            public void onLevelChanged(int level) {
+                levelTextView.setText("Level: " + level);
+                Toast.makeText(MainActivity.this, "Level Up! X2 on points", Toast.LENGTH_SHORT).show();
             }
         });
     }

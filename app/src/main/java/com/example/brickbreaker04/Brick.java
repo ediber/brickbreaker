@@ -15,13 +15,13 @@ public class Brick {
             Color.RED, Color.YELLOW, Color.GREEN, Color.MAGENTA, Color.CYAN // Random colors except blue
     };
 
-    public Brick(int brickLeft, int brickTop, int brickWidth, int brickHeight) {
+    public Brick(int brickLeft, int brickTop, int brickWidth, int brickHeight, int scoreMultiplier) {
         this.rect = new Rect(brickLeft, brickTop, brickLeft + brickWidth, brickTop + brickHeight);;
         Random random = new Random();
         paint = new Paint();
         int index = random.nextInt(colors.length);
         this.paint.setColor(colors[index]);
-        this.score = (index+1) * 50;
+        this.score = (index+1) * 50 * scoreMultiplier;
     }
 
     ///

@@ -11,7 +11,6 @@ import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -21,8 +20,9 @@ import java.util.Random;
 
 public class GameView extends View {
 
-    public interface ScoreListener {
+    public interface Listener {
         void onScoreChanged(int score);
+        void onLevelChanged(int level);
     }
 
     private Paint paint;
@@ -45,7 +45,9 @@ public class GameView extends View {
     private Ball ball;
     private Thread ballThread;
     private int score = 0;
-    private ScoreListener scoreListener;
+    private Listener listener;
+    private int level = 1;
+    private int scoreMultiplier = 1;
 
     private Runnable runnable = new Runnable() {
         @Override
@@ -72,8 +74,8 @@ public class GameView extends View {
         });
     }
 
-    public void setScoreListener(ScoreListener listener) {
-        this.scoreListener = listener;
+    public void setListener(Listener listener) {
+        this.listener = listener;
     }
 
     private void init() {
@@ -87,17 +89,17 @@ public class GameView extends View {
         paddle = new Rect(paddleX, paddleY, paddleX + paddleWidth, paddleY + paddleHeight);
 
         paint.setColor(Color.BLUE); // Set paddle color to blue
-        initBricks(); // Initialize the bricks
+        initBricks(1); // Initialize the bricks
         initBall();
     }
 
-    private void initBricks() {
+    private void initBricks(int scoreMultiplier) {
         bricks.clear(); // Clear the existing bricks
         int brickTop = 50; // Start 50 pixels down from the top of the screen
         for (int row = 0; row < numBrickRows; row++) {
             int brickLeft = brickPadding;
             for (int col = 0; col < numBricksPerRow; col++) {
-                Brick brick = new Brick(brickLeft, brickTop, brickWidth, brickHeight);
+                Brick brick = new Brick(brickLeft, brickTop, brickWidth, brickHeight, scoreMultiplier);
                 bricks.add(brick);
 
                 brickLeft += brickWidth + brickPadding; // Move to the right
@@ -272,19 +274,22 @@ public class GameView extends View {
     public void removeBrick(Brick brick) {
         bricks.remove(brick);
         score += brick.getScore();
-        if (scoreListener != null) {
+        if (listener != null) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    scoreListener.onScoreChanged(score);
+                    listener.onScoreChanged(score);
                 }
             });
         }
     }
 
     public void advanceLevel() { // TODO test it
-        initBricks(); // Reinitialize bricks
+        scoreMultiplier++; // Increase the score multiplier
+        initBricks(scoreMultiplier); // Reinitialize bricks
         invalidate(); // Redraw the view to reflect changes
+        level++;
+        listener.onLevelChanged(level); // Notify the listener that the level has changed
     }
 
     public void speedUp() {
