@@ -2,13 +2,16 @@ package com.example.brickbreaker04.activities;
 
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.brickbreaker04.GameView;
 import com.example.brickbreaker04.R;
 
 public class MainActivity extends BaseActivity {
 
-    private static final int GAME_DURATION_SECONDS = 20 * 1000; // 20 seconds in milliseconds
+    private static final int GAME_DURATION_SECONDS = 30 * 1000; // 20 seconds in milliseconds
 
     private GameView gameView;
     private TextView scoreTextView;
@@ -50,15 +53,18 @@ public class MainActivity extends BaseActivity {
     private void startTimer(long millisInFuture) {
         countDownTimer = new CountDownTimer(millisInFuture, 1000) {
             public void onTick(long millisUntilFinished) {
-                remainingTime = millisUntilFinished;
-                long minutes = (remainingTime / 1000) / 60;
-                long seconds = (remainingTime / 1000) % 60;
+          //      remainingTime = millisUntilFinished;
+                long minutes = (millisUntilFinished / 1000) / 60;
+                long seconds = (millisUntilFinished / 1000) % 60;
                 timerTextView.setText(String.format("%02d:%02d", minutes, seconds));
             }
 
             public void onFinish() {
                 timerTextView.setText("00:00");
-             //   gameView.gameOver();
+                Toast.makeText(MainActivity.this, "Time's up! speed increases", Toast.LENGTH_SHORT).show();
+                Log.d("MainActivity", "Time's up! speed increases");
+                gameView.speedUp();
+                startTimer(remainingTime);
             }
         }.start();
     }
@@ -75,7 +81,7 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         if (remainingTime > 0) {
-            startTimer(remainingTime);
+      //      startTimer(remainingTime);
         } else {
             timerTextView.setText("00:00");
        //     gameView.gameOver();

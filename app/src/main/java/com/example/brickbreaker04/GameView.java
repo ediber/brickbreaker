@@ -11,16 +11,16 @@ import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
-
 import com.example.brickbreaker04.activities.AddResultActivity;
-
 import java.util.ArrayList;
 import java.util.Random;
 
 public class GameView extends View {
+
     public interface ScoreListener {
         void onScoreChanged(int score);
     }
@@ -83,7 +83,7 @@ public class GameView extends View {
         screenHeight = getResources().getDisplayMetrics().heightPixels;
 
         int paddleX = screenWidth / 2 - paddleWidth / 2;
-        int paddleY = screenHeight - paddleHeight - 200; // 20 pixels from the bottom
+        int paddleY = screenHeight - paddleHeight - 400; // 20 pixels from the bottom
         paddle = new Rect(paddleX, paddleY, paddleX + paddleWidth, paddleY + paddleHeight);
 
         paint.setColor(Color.BLUE); // Set paddle color to blue
@@ -285,6 +285,9 @@ public class GameView extends View {
     public void advanceLevel() { // TODO test it
         initBricks(); // Reinitialize bricks
         invalidate(); // Redraw the view to reflect changes
+    }
+
+    public void speedUp() {
         ball.reduceSleepTime();
     }
 

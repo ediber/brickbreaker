@@ -1,6 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#2196F3"
     android:orientation="vertical"
     android:weightSum="1">  <!-- Ensure the sum matches the weights assigned -->
 
@@ -23,14 +24,14 @@
 
         <TextView
             android:id="@+id/timerTextView"
-            android:background="#D52626"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="03:00"
-            android:textSize="24sp"
+            android:background="#D52626"
             android:gravity="center"
-            android:textColor="#FFFFFF" />
+            android:text="03:00"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp" />
     </LinearLayout>
 
     <com.example.brickbreaker04.GameView
