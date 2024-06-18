@@ -39,4 +39,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/saveButton" />
 
+    <Button
+        android:id="@+id/newGameButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="60dp"
+        android:text="newGame"
+        app:layout_constraintStart_toStartOf="@+id/viewScoresButton"
+        app:layout_constraintTop_toBottomOf="@+id/viewScoresButton" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

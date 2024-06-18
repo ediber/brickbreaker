@@ -22,6 +22,7 @@ public class AddResultActivity extends BaseActivity {
     private Button viewScoresButton;
     private int score;
     private FirebaseFirestore db;
+    private View newGameButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,7 @@ public class AddResultActivity extends BaseActivity {
         scoreTextView = findViewById(R.id.scoreTextView);
         saveButton = findViewById(R.id.saveButton);
         viewScoresButton = findViewById(R.id.viewScoresButton);
+        newGameButton = findViewById(R.id.newGameButton);
     }
 
     @Override
@@ -58,6 +60,16 @@ public class AddResultActivity extends BaseActivity {
         saveButton.setOnClickListener(v -> saveScore(score));
 
         viewScoresButton.setOnClickListener(v -> viewScores());
+
+        newGameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AddResultActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     private void saveScore(int score) {
