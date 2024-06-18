@@ -82,7 +82,7 @@ public class LoginActivity extends BaseActivity {
                             Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
 
                              currentUser = user;
-                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                             Intent intent = new Intent(LoginActivity.this, InstructionsActivity.class);
                              startActivity(intent);
                         }
                     } else {
