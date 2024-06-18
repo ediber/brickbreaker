@@ -1,5 +1,6 @@
 package com.example.brickbreaker04.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -7,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.brickbreaker04.GameView;
+import com.example.brickbreaker04.MusicService;
 import com.example.brickbreaker04.R;
 
 public class MainActivity extends BaseActivity {
@@ -32,6 +34,8 @@ public class MainActivity extends BaseActivity {
         // Start the game and the timer
         gameView.startGame();
         startTimer(remainingTime);
+
+        startService(new Intent(this, MusicService.class));
     }
 
     @Override
@@ -57,6 +61,11 @@ public class MainActivity extends BaseActivity {
             public void onLevelChanged(int level) {
                 levelTextView.setText("Level: " + level);
                 Toast.makeText(MainActivity.this, "Level Up! X2 on points", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onGameOver() {
+                stopService(new Intent(MainActivity.this, MusicService.class));
             }
         });
     }

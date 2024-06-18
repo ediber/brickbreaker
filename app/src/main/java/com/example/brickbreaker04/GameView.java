@@ -23,6 +23,7 @@ public class GameView extends View {
     public interface Listener {
         void onScoreChanged(int score);
         void onLevelChanged(int level);
+        void onGameOver();
     }
 
     private Paint paint;
@@ -242,6 +243,8 @@ public class GameView extends View {
         if (ball != null) {
             ball.stop(); // Stop the ball's thread
         }
+
+        listener.onGameOver();
 
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
